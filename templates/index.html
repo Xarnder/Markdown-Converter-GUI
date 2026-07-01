@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f1419" id="meta-theme-color" />
+  <title>MD Converter</title>
+  <script>
+    (function () {
+      const theme = localStorage.getItem("md-converter-theme") || "dark";
+      document.documentElement.setAttribute("data-theme", theme);
+      const themeColor = theme === "dark" ? "#0f1419" : "#f4f6f8";
+      const meta = document.getElementById("meta-theme-color");
+      if (meta) {
+        meta.setAttribute("content", themeColor);
+      }
+    })();
+  </script>
+  <link rel="icon" href="/static/favicon-dark.svg" type="image/svg+xml" id="favicon-svg" />
+  <link rel="icon" href="/static/favicon-32x32.png" type="image/png" sizes="32x32" id="favicon-png" />
+  <link rel="icon" href="/static/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/static/apple-touch-icon.png" />
+  <link rel="manifest" href="/static/site.webmanifest" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <div id="completion-banner" class="completion-banner hidden" role="dialog" aria-live="polite">
+    <div class="completion-card">
+      <div class="completion-icon" id="completion-icon">✓</div>
+      <h2 id="completion-title">Conversion complete!</h2>
+      <p id="completion-message"></p>
+      <p class="completion-output" id="completion-output"></p>
+      <div class="completion-actions">
+        <button type="button" class="btn btn-secondary btn-large" id="open-output-modal" disabled>Open output folder</button>
+        <button type="button" class="btn btn-primary btn-large" id="dismiss-completion">Great!</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="app">
+    <header class="header">
+      <div class="header-top">
+        <h1>MD Converter</h1>
+        <button type="button" class="btn btn-ghost theme-toggle" id="theme-toggle" aria-label="Switch to light mode">
+          <span id="theme-toggle-label">Light mode</span>
+        </button>
+      </div>
+      <p id="subtitle">Convert DOCX and PDF files to Markdown</p>
+    </header>
+
+    <section class="card">
+      <span class="field-label">Conversion direction</span>
+      <div class="mode-options" role="radiogroup" aria-label="Conversion direction">
+        <label class="mode-option">
+          <input type="radio" name="conversion-mode" value="to_markdown" checked />
+          <span class="mode-option-body">
+            <strong>DOCX / PDF → Markdown</strong>
+            <small>Default</small>
+          </span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="conversion-mode" value="to_docx" />
+          <span class="mode-option-body">
+            <strong>Markdown → DOCX</strong>
+            <small>.md files to Word</small>
+          </span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="conversion-mode" value="to_pdf" />
+          <span class="mode-option-body">
+            <strong>Markdown → PDF</strong>
+            <small>.md files to PDF</small>
+          </span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="conversion-mode" value="to_docx_pdf" />
+          <span class="mode-option-body">
+            <strong>Markdown → DOCX + PDF</strong>
+            <small>Both formats at once</small>
+          </span>
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="field-label">Input source</span>
+      <div class="source-toggle" role="radiogroup" aria-label="Input source">
+        <label class="source-option">
+          <input type="radio" name="input-source" value="folder" />
+          <span>Folder</span>
+        </label>
+        <label class="source-option">
+          <input type="radio" name="input-source" value="file" checked />
+          <span>Single file</span>
+        </label>
+      </div>
+
+      <label class="field-label input-label" for="input-path" id="input-label">Input file</label>
+      <div class="path-row">
+        <input id="input-path" class="path-input" type="text" placeholder="/path/to/document.md" spellcheck="false" />
+        <button type="button" class="btn btn-secondary" id="browse-input">Browse</button>
+      </div>
+      <p class="hint" id="file-count">No input file selected</p>
+    </section>
+
+    <section class="card">
+      <label class="field-label" for="output-dir">Output folder</label>
+      <div class="path-row">
+        <input id="output-dir" class="path-input" type="text" placeholder="/path/to/output" spellcheck="false" />
+        <button type="button" class="btn btn-secondary" id="browse-output">Browse</button>
+      </div>
+    </section>
+
+    <section class="card options">
+      <div class="options-row">
+        <label class="checkbox-row">
+          <input type="checkbox" id="debug-mode" />
+          <span>Enable debug logging</span>
+        </label>
+        <button type="button" class="btn btn-secondary" id="reset-btn">Reset</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="progress-header">
+        <span class="field-label">Progress</span>
+        <span id="status-text">Ready</span>
+      </div>
+      <div class="progress-track" id="progress-track" aria-hidden="true">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </section>
+
+    <section class="card log-card hidden" id="log-section">
+      <div class="log-header">
+        <span class="field-label">Log</span>
+        <div class="log-actions">
+          <button type="button" class="btn btn-ghost" id="copy-log">Copy log</button>
+          <button type="button" class="btn btn-ghost" id="clear-log">Clear log</button>
+        </div>
+      </div>
+      <pre class="log-panel" id="log-panel"></pre>
+    </section>
+
+    <section class="card engine-status-card" id="engine-status-card" aria-live="polite">
+      <span class="field-label">Conversion engine</span>
+      <div class="engine-status-active" id="engine-status-active">
+        <span class="engine-status-dot"></span>
+        <div>
+          <strong id="engine-active-label">Checking…</strong>
+          <small id="engine-active-detail"></small>
+        </div>
+      </div>
+      <div class="engine-status-grid">
+        <div class="engine-pill" id="engine-pandoc-pill">
+          <span class="engine-pill-label">Pandoc</span>
+          <span class="engine-pill-value" id="engine-pandoc-value">Checking…</span>
+        </div>
+        <div class="engine-pill" id="engine-pdf-pill">
+          <span class="engine-pill-label">PDF engine</span>
+          <span class="engine-pill-value" id="engine-pdf-value">Checking…</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="floating-footer">
+    <button type="button" class="btn btn-secondary btn-large" id="open-output-btn" disabled>Open output folder</button>
+    <button type="button" class="btn btn-primary btn-large" id="convert-btn">Convert</button>
+  </footer>
+
+  <audio id="done-sound" src="/static/Done-Sound.mp3" preload="auto"></audio>
+  <script src="/static/app.js"></script>
+</body>
+</html>

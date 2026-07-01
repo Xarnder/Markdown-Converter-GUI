@@ -1,0 +1,112 @@
+========================================
+  MD Converter
+========================================
+
+Started: Wed  1 Jul 2026 13:37:38 BST
+Folder: /Users/WorkXander/Documents/Code/MD-Converter
+
+Using Python: /usr/local/bin/python3
+
+Installing dependencies...
+WARNING: Ignoring invalid distribution -arwhals (/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages)
+WARNING: Ignoring invalid distribution -ypdfium2 (/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages)
+Requirement already satisfied: flask in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from -r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 2)) (3.1.3)
+Requirement already satisfied: markdown in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from -r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 3)) (3.10.2)
+Requirement already satisfied: html2docx in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from -r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 4)) (1.6.0)
+Requirement already satisfied: xhtml2pdf in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from -r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (0.2.17)
+Requirement already satisfied: markitdown[all] in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from -r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (0.1.6)
+Requirement already satisfied: beautifulsoup4 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (4.15.0)
+Requirement already satisfied: charset-normalizer in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (3.4.3)
+Requirement already satisfied: defusedxml in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (0.7.1)
+Requirement already satisfied: magika~=0.6.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (0.6.3)
+Requirement already satisfied: markdownify in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (1.2.2)
+Requirement already satisfied: requests in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (2.32.5)
+Requirement already satisfied: azure-ai-contentunderstanding>=1.2.0b1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (1.2.0b2)
+Requirement already satisfied: azure-ai-documentintelligence in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (1.0.2)
+Requirement already satisfied: azure-identity in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (1.25.3)
+Requirement already satisfied: lxml in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (6.1.1)
+Requirement already satisfied: mammoth~=1.11.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (1.11.0)
+Requirement already satisfied: olefile in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (0.47)
+Requirement already satisfied: openpyxl in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (3.1.5)
+Requirement already satisfied: pandas in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (2.2.3)
+Requirement already satisfied: pdfminer-six>=20251230 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (20260107)
+Requirement already satisfied: pdfplumber>=0.11.9 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (0.11.10)
+Requirement already satisfied: pydub in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (0.25.1)
+Requirement already satisfied: python-pptx in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (1.0.2)
+Requirement already satisfied: speechrecognition in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (3.17.0)
+Requirement already satisfied: xlrd in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (2.0.2)
+Requirement already satisfied: youtube-transcript-api~=1.0.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (1.0.3)
+Requirement already satisfied: click>=8.1.7 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from magika~=0.6.1->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (8.3.3)
+Requirement already satisfied: onnxruntime>=1.17.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from magika~=0.6.1->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (1.23.2)
+Requirement already satisfied: numpy>=1.24 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from magika~=0.6.1->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (2.2.3)
+Requirement already satisfied: python-dotenv>=1.0.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from magika~=0.6.1->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (1.2.2)
+Requirement already satisfied: cobble<0.2,>=0.1.3 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from mammoth~=1.11.0->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (0.1.4)
+Requirement already satisfied: blinker>=1.9.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from flask->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 2)) (1.9.0)
+Requirement already satisfied: itsdangerous>=2.2.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from flask->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 2)) (2.2.0)
+Requirement already satisfied: jinja2>=3.1.2 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from flask->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 2)) (3.1.6)
+Requirement already satisfied: markupsafe>=2.1.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from flask->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 2)) (3.0.3)
+Requirement already satisfied: werkzeug>=3.1.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from flask->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 2)) (3.1.8)
+Requirement already satisfied: python-docx in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from html2docx->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 4)) (1.2.0)
+Requirement already satisfied: tinycss2 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from html2docx->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 4)) (1.5.1)
+Requirement already satisfied: arabic-reshaper>=3.0.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (3.0.1)
+Requirement already satisfied: html5lib>=1.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (1.1)
+Requirement already satisfied: Pillow>=8.1.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (12.2.0)
+Requirement already satisfied: pyHanko>=0.12.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (0.35.1)
+Requirement already satisfied: pyhanko-certvalidator>=0.19.5 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (0.31.1)
+Requirement already satisfied: pypdf>=3.1.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (6.14.2)
+Requirement already satisfied: python-bidi>=0.5.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (0.6.11)
+Requirement already satisfied: reportlab<5,>=4.0.4 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (4.4.3)
+Requirement already satisfied: svglib>=1.2.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (2.0.2)
+Requirement already satisfied: isodate>=0.6.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from azure-ai-contentunderstanding>=1.2.0b1->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (0.7.2)
+Requirement already satisfied: azure-core>=1.37.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from azure-ai-contentunderstanding>=1.2.0b1->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (1.41.0)
+Requirement already satisfied: typing-extensions>=4.6.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from azure-ai-contentunderstanding>=1.2.0b1->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (4.15.0)
+Requirement already satisfied: six>=1.9 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from html5lib>=1.1->xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (1.17.0)
+Requirement already satisfied: webencodings in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from html5lib>=1.1->xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (0.5.1)
+Requirement already satisfied: coloredlogs in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from onnxruntime>=1.17.0->magika~=0.6.1->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (15.0.1)
+Requirement already satisfied: flatbuffers in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from onnxruntime>=1.17.0->magika~=0.6.1->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (25.12.19)
+Requirement already satisfied: packaging in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from onnxruntime>=1.17.0->magika~=0.6.1->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (24.2)
+Requirement already satisfied: protobuf in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from onnxruntime>=1.17.0->magika~=0.6.1->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (6.33.5)
+Requirement already satisfied: sympy in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from onnxruntime>=1.17.0->magika~=0.6.1->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (1.14.0)
+Requirement already satisfied: cryptography>=36.0.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from pdfminer-six>=20251230->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (49.0.0)
+Requirement already satisfied: cffi>=2.0.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from cryptography>=36.0.0->pdfminer-six>=20251230->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (2.0.0)
+Requirement already satisfied: pycparser in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from cffi>=2.0.0->cryptography>=36.0.0->pdfminer-six>=20251230->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (2.22)
+Requirement already satisfied: pypdfium2>=5.9.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from pdfplumber>=0.11.9->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (5.10.1)
+Requirement already satisfied: asn1crypto>=1.5.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from pyHanko>=0.12.1->xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (1.5.1)
+Requirement already satisfied: tzlocal>=4.3 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from pyHanko>=0.12.1->xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (5.4.4)
+Requirement already satisfied: pyyaml>=6.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from pyHanko>=0.12.1->xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (6.0.3)
+Requirement already satisfied: oscrypto>=1.1.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from pyhanko-certvalidator>=0.19.5->xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (1.3.0)
+Requirement already satisfied: uritools>=3.0.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from pyhanko-certvalidator>=0.19.5->xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (6.1.2)
+Requirement already satisfied: idna<4,>=2.5 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from requests->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from requests->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (2.6.3)
+Requirement already satisfied: certifi>=2017.4.17 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from requests->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (2026.1.4)
+Requirement already satisfied: cssselect2>=0.2.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from svglib>=1.2.1->xhtml2pdf->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 5)) (0.9.0)
+Requirement already satisfied: msal>=1.35.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from azure-identity->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (1.37.0)
+Requirement already satisfied: msal-extensions>=1.2.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from azure-identity->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (1.3.1)
+Requirement already satisfied: PyJWT<3,>=1.0.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from PyJWT[crypto]<3,>=1.0.0->msal>=1.35.1->azure-identity->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (2.11.0)
+Requirement already satisfied: soupsieve>=1.6.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from beautifulsoup4->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (2.8.4)
+Requirement already satisfied: humanfriendly>=9.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from coloredlogs->onnxruntime>=1.17.0->magika~=0.6.1->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (10.0)
+Requirement already satisfied: et-xmlfile in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from openpyxl->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (2.0.0)
+Requirement already satisfied: python-dateutil>=2.8.2 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from pandas->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (2.9.0.post0)
+Requirement already satisfied: pytz>=2020.1 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from pandas->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (2025.1)
+Requirement already satisfied: tzdata>=2022.7 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from pandas->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (2025.1)
+Requirement already satisfied: XlsxWriter>=0.5.7 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from python-pptx->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (3.2.9)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages (from sympy->onnxruntime>=1.17.0->magika~=0.6.1->markitdown[all]->-r /Users/WorkXander/Documents/Code/MD-Converter/requirements.txt (line 1)) (1.3.0)
+WARNING: Ignoring invalid distribution -arwhals (/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages)
+WARNING: Ignoring invalid distribution -ypdfium2 (/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages)
+WARNING: Ignoring invalid distribution -arwhals (/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages)
+WARNING: Ignoring invalid distribution -ypdfium2 (/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages)
+
+[notice] A new release of pip is available: 25.3 -> 26.1.2
+[notice] To update, run: python3 -m pip install --upgrade pip
+
+Starting MD Converter...
+The UI should open in your browser automatically.
+If it does not, open: http://127.0.0.1:8765
+Keep this Terminal window open while using the app.
+Press Ctrl+C here to stop the server.
+
+Port 8765 is busy. Using port 8766 instead.
+MD Converter web UI running at http://127.0.0.1:8766
+Press Ctrl+C to stop.
+ * Serving Flask app 'MD-Converter'
+ * Debug mode: off
