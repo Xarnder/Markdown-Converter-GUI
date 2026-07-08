@@ -13,6 +13,7 @@ const copyLogBtn = document.getElementById("copy-log");
 const debugMode = document.getElementById("debug-mode");
 const prefNormalizeDashes = document.getElementById("pref-normalize-dashes");
 const prefNormalizeArrows = document.getElementById("pref-normalize-arrows");
+const prefPlainInlineCode = document.getElementById("pref-plain-inline-code");
 const subtitle = document.getElementById("subtitle");
 const inputLabel = document.getElementById("input-label");
 const modeInputs = document.querySelectorAll('input[name="conversion-mode"]');
@@ -39,6 +40,7 @@ const metaThemeColor = document.getElementById("meta-theme-color");
 const THEME_STORAGE_KEY = "md-converter-theme";
 const PREF_DASHES_STORAGE_KEY = "md-converter-pref-normalize-dashes";
 const PREF_ARROWS_STORAGE_KEY = "md-converter-pref-normalize-arrows";
+const PREF_PLAIN_INLINE_CODE_STORAGE_KEY = "md-converter-pref-plain-inline-code";
 
 const MODE_COPY = {
   to_markdown: {
@@ -117,17 +119,20 @@ function readStoredBoolean(key, defaultValue = true) {
 function saveTextPreferences() {
   localStorage.setItem(PREF_DASHES_STORAGE_KEY, String(prefNormalizeDashes.checked));
   localStorage.setItem(PREF_ARROWS_STORAGE_KEY, String(prefNormalizeArrows.checked));
+  localStorage.setItem(PREF_PLAIN_INLINE_CODE_STORAGE_KEY, String(prefPlainInlineCode.checked));
 }
 
 function loadTextPreferences() {
   prefNormalizeDashes.checked = readStoredBoolean(PREF_DASHES_STORAGE_KEY, true);
   prefNormalizeArrows.checked = readStoredBoolean(PREF_ARROWS_STORAGE_KEY, true);
+  prefPlainInlineCode.checked = readStoredBoolean(PREF_PLAIN_INLINE_CODE_STORAGE_KEY, false);
 }
 
 function getTextPreferences() {
   return {
     normalize_dashes: prefNormalizeDashes.checked,
     normalize_arrows: prefNormalizeArrows.checked,
+    plain_inline_code: prefPlainInlineCode.checked,
   };
 }
 
@@ -508,6 +513,7 @@ function resetAll() {
   debugMode.checked = false;
   prefNormalizeDashes.checked = true;
   prefNormalizeArrows.checked = true;
+  prefPlainInlineCode.checked = false;
   saveTextPreferences();
   lastSuggestedOutput = "";
   lastOutputPath = "";
@@ -684,6 +690,7 @@ sourceInputs.forEach((input) => {
 debugMode.addEventListener("change", updateLogVisibility);
 prefNormalizeDashes.addEventListener("change", saveTextPreferences);
 prefNormalizeArrows.addEventListener("change", saveTextPreferences);
+prefPlainInlineCode.addEventListener("change", saveTextPreferences);
 document.getElementById("reset-btn").addEventListener("click", resetAll);
 document.getElementById("open-output-btn").addEventListener("click", () => openOutputFolder());
 document.getElementById("open-output-modal").addEventListener("click", () => openOutputFolder());

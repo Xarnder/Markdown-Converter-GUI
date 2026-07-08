@@ -125,6 +125,7 @@ HUMANIZE_ARROW_REPLACEMENTS = {
 class TextPreferences:
     normalize_dashes: bool = True
     normalize_arrows: bool = True
+    plain_inline_code: bool = False
 
 
 def parse_text_preferences(payload: dict | None = None) -> TextPreferences:
@@ -132,6 +133,7 @@ def parse_text_preferences(payload: dict | None = None) -> TextPreferences:
     return TextPreferences(
         normalize_dashes=data.get("normalize_dashes", True),
         normalize_arrows=data.get("normalize_arrows", True),
+        plain_inline_code=data.get("plain_inline_code", False),
     )
 
 
@@ -516,12 +518,30 @@ def humanize_markdown(text: str, preferences: TextPreferences | None = None) -> 
     return "".join(parts)
 
 
+def plainify_inline_code(text: str) -> str:
+    """Remove inline backticks so code spans render as normal body text."""
+    parts = re.split(r"(```[\s\S]*?```)", text)
+    for index, part in enumerate(parts):
+        if part.startswith("```"):
+            continue
+        parts[index] = re.sub(r"`([^`\n]+)`", r"\1", part)
+    return "".join(parts)
+
+
+def prepare_markdown_text(text: str, preferences: TextPreferences | None = None) -> str:
+    """Apply optional text cleanup before markdown import or export."""
+    preferences = preferences or TextPreferences()
+    if preferences.plain_inline_code:
+        text = plainify_inline_code(text)
+    return humanize_markdown(text, preferences)
+
+
 @contextmanager
 def prepared_markdown_file(md_path: Path, preferences: TextPreferences | None = None):
     """Yield a markdown path safe for Pandoc, applying text cleanup if needed."""
     preferences = preferences or TextPreferences()
     original_text = md_path.read_text(encoding="utf-8")
-    markdown_text = humanize_markdown(original_text, preferences)
+    markdown_text = prepare_markdown_text(original_text, preferences)
     sanitized_text, replacement_count = sanitize_markdown_images(markdown_text)
 
     if replacement_count:
@@ -971,7 +991,7 @@ def convert_to_markdown(
 ) -> None:
     result = md_engine.convert(str(file_path))
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    markdown_text = humanize_markdown(result.text_content, preferences)
+    markdown_text = prepare_markdown_text(result.text_content, preferences)
     output_path.write_text(markdown_text, encoding="utf-8")
 
 
