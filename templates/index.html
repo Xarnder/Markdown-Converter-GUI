@@ -114,6 +114,24 @@
     </section>
 
     <section class="card options">
+      <span class="field-label">Text preferences</span>
+      <p class="hint preference-hint">Replace common LLM-style punctuation with simpler ASCII. Applied on import and export.</p>
+      <div class="preference-list">
+        <label class="toggle-row">
+          <span class="toggle-label">Replace em/en dashes (—, –) with hyphens (-)</span>
+          <span class="toggle-switch">
+            <input type="checkbox" id="pref-normalize-dashes" checked />
+            <span class="toggle-slider" aria-hidden="true"></span>
+          </span>
+        </label>
+        <label class="toggle-row">
+          <span class="toggle-label">Replace Unicode arrows (→, ←, ↔, …) with ASCII (-->, &lt;--, …)</span>
+          <span class="toggle-switch">
+            <input type="checkbox" id="pref-normalize-arrows" checked />
+            <span class="toggle-slider" aria-hidden="true"></span>
+          </span>
+        </label>
+      </div>
       <div class="options-row">
         <label class="checkbox-row">
           <input type="checkbox" id="debug-mode" />

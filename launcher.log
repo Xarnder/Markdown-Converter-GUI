@@ -2,7 +2,7 @@
   MD Converter
 ========================================
 
-Started: Wed  1 Jul 2026 13:37:38 BST
+Started: Wed  8 Jul 2026 13:21:13 BST
 Folder: /Users/WorkXander/Documents/Code/MD-Converter
 
 Using Python: /usr/local/bin/python3
@@ -105,8 +105,10 @@ If it does not, open: http://127.0.0.1:8765
 Keep this Terminal window open while using the app.
 Press Ctrl+C here to stop the server.
 
-Port 8765 is busy. Using port 8766 instead.
-MD Converter web UI running at http://127.0.0.1:8766
+MD Converter web UI running at http://127.0.0.1:8765
 Press Ctrl+C to stop.
  * Serving Flask app 'MD-Converter'
  * Debug mode: off
+
+Error: MD Converter stopped unexpectedly.
+Check launcher.log in this folder for details.

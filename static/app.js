@@ -11,6 +11,8 @@ const openOutputBtn = document.getElementById("open-output-btn");
 const openOutputModal = document.getElementById("open-output-modal");
 const copyLogBtn = document.getElementById("copy-log");
 const debugMode = document.getElementById("debug-mode");
+const prefNormalizeDashes = document.getElementById("pref-normalize-dashes");
+const prefNormalizeArrows = document.getElementById("pref-normalize-arrows");
 const subtitle = document.getElementById("subtitle");
 const inputLabel = document.getElementById("input-label");
 const modeInputs = document.querySelectorAll('input[name="conversion-mode"]');
@@ -35,6 +37,8 @@ const faviconSvg = document.getElementById("favicon-svg");
 const metaThemeColor = document.getElementById("meta-theme-color");
 
 const THEME_STORAGE_KEY = "md-converter-theme";
+const PREF_DASHES_STORAGE_KEY = "md-converter-pref-normalize-dashes";
+const PREF_ARROWS_STORAGE_KEY = "md-converter-pref-normalize-arrows";
 
 const MODE_COPY = {
   to_markdown: {
@@ -100,6 +104,31 @@ function setTheme(theme) {
 
 function toggleTheme() {
   setTheme(getTheme() === "dark" ? "light" : "dark");
+}
+
+function readStoredBoolean(key, defaultValue = true) {
+  const stored = localStorage.getItem(key);
+  if (stored === null) {
+    return defaultValue;
+  }
+  return stored === "true";
+}
+
+function saveTextPreferences() {
+  localStorage.setItem(PREF_DASHES_STORAGE_KEY, String(prefNormalizeDashes.checked));
+  localStorage.setItem(PREF_ARROWS_STORAGE_KEY, String(prefNormalizeArrows.checked));
+}
+
+function loadTextPreferences() {
+  prefNormalizeDashes.checked = readStoredBoolean(PREF_DASHES_STORAGE_KEY, true);
+  prefNormalizeArrows.checked = readStoredBoolean(PREF_ARROWS_STORAGE_KEY, true);
+}
+
+function getTextPreferences() {
+  return {
+    normalize_dashes: prefNormalizeDashes.checked,
+    normalize_arrows: prefNormalizeArrows.checked,
+  };
 }
 
 function getSelectedMode() {
@@ -477,6 +506,9 @@ function resetAll() {
   inputPath.value = "";
   outputDir.value = "";
   debugMode.checked = false;
+  prefNormalizeDashes.checked = true;
+  prefNormalizeArrows.checked = true;
+  saveTextPreferences();
   lastSuggestedOutput = "";
   lastOutputPath = "";
   conversionComplete = false;
@@ -591,6 +623,7 @@ async function startConversion() {
         output_dir: outputValue,
         mode: getSelectedMode(),
         debug: debugMode.checked,
+        ...getTextPreferences(),
       }),
     });
   } catch (error) {
@@ -649,6 +682,8 @@ sourceInputs.forEach((input) => {
 });
 
 debugMode.addEventListener("change", updateLogVisibility);
+prefNormalizeDashes.addEventListener("change", saveTextPreferences);
+prefNormalizeArrows.addEventListener("change", saveTextPreferences);
 document.getElementById("reset-btn").addEventListener("click", resetAll);
 document.getElementById("open-output-btn").addEventListener("click", () => openOutputFolder());
 document.getElementById("open-output-modal").addEventListener("click", () => openOutputFolder());
@@ -674,6 +709,7 @@ completionBanner.addEventListener("click", (event) => {
 
 updateModeCopy();
 updateLogVisibility();
+loadTextPreferences();
 updateOpenOutputButtons();
 updateFavicon(getTheme());
 updateThemeToggle(getTheme());
