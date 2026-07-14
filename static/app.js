@@ -9,11 +9,14 @@ const logPanel = document.getElementById("log-panel");
 const convertBtn = document.getElementById("convert-btn");
 const openOutputBtn = document.getElementById("open-output-btn");
 const openOutputModal = document.getElementById("open-output-modal");
+const resetAllModal = document.getElementById("reset-all-modal");
 const copyLogBtn = document.getElementById("copy-log");
 const debugMode = document.getElementById("debug-mode");
 const prefNormalizeDashes = document.getElementById("pref-normalize-dashes");
 const prefNormalizeArrows = document.getElementById("pref-normalize-arrows");
 const prefPlainInlineCode = document.getElementById("pref-plain-inline-code");
+const prefCombineMarkdown = document.getElementById("pref-combine-markdown");
+const exportOptions = document.getElementById("export-options");
 const subtitle = document.getElementById("subtitle");
 const inputLabel = document.getElementById("input-label");
 const modeInputs = document.querySelectorAll('input[name="conversion-mode"]');
@@ -41,6 +44,7 @@ const THEME_STORAGE_KEY = "md-converter-theme";
 const PREF_DASHES_STORAGE_KEY = "md-converter-pref-normalize-dashes";
 const PREF_ARROWS_STORAGE_KEY = "md-converter-pref-normalize-arrows";
 const PREF_PLAIN_INLINE_CODE_STORAGE_KEY = "md-converter-pref-plain-inline-code";
+const PREF_COMBINE_MARKDOWN_STORAGE_KEY = "md-converter-pref-combine-markdown";
 
 const MODE_COPY = {
   to_markdown: {
@@ -120,12 +124,14 @@ function saveTextPreferences() {
   localStorage.setItem(PREF_DASHES_STORAGE_KEY, String(prefNormalizeDashes.checked));
   localStorage.setItem(PREF_ARROWS_STORAGE_KEY, String(prefNormalizeArrows.checked));
   localStorage.setItem(PREF_PLAIN_INLINE_CODE_STORAGE_KEY, String(prefPlainInlineCode.checked));
+  localStorage.setItem(PREF_COMBINE_MARKDOWN_STORAGE_KEY, String(prefCombineMarkdown.checked));
 }
 
 function loadTextPreferences() {
   prefNormalizeDashes.checked = readStoredBoolean(PREF_DASHES_STORAGE_KEY, true);
   prefNormalizeArrows.checked = readStoredBoolean(PREF_ARROWS_STORAGE_KEY, true);
   prefPlainInlineCode.checked = readStoredBoolean(PREF_PLAIN_INLINE_CODE_STORAGE_KEY, false);
+  prefCombineMarkdown.checked = readStoredBoolean(PREF_COMBINE_MARKDOWN_STORAGE_KEY, false);
 }
 
 function getTextPreferences() {
@@ -133,6 +139,7 @@ function getTextPreferences() {
     normalize_dashes: prefNormalizeDashes.checked,
     normalize_arrows: prefNormalizeArrows.checked,
     plain_inline_code: prefPlainInlineCode.checked,
+    combine_into_single_file: prefCombineMarkdown.checked,
   };
 }
 
@@ -166,10 +173,12 @@ function isSingleFileMode() {
 }
 
 function updateModeCopy() {
-  const copy = MODE_COPY[getSelectedMode()];
+  const mode = getSelectedMode();
+  const copy = MODE_COPY[mode];
   subtitle.textContent = copy.subtitle;
   inputLabel.textContent = isSingleFileMode() ? "Input file" : "Input folder";
   inputPath.placeholder = isSingleFileMode() ? "/path/to/document.pdf" : "/path/to/documents";
+  exportOptions.classList.toggle("hidden", mode !== "to_markdown");
   loadEngineStatus();
 }
 
@@ -514,6 +523,7 @@ function resetAll() {
   prefNormalizeDashes.checked = true;
   prefNormalizeArrows.checked = true;
   prefPlainInlineCode.checked = false;
+  prefCombineMarkdown.checked = false;
   saveTextPreferences();
   lastSuggestedOutput = "";
   lastOutputPath = "";
@@ -691,7 +701,11 @@ debugMode.addEventListener("change", updateLogVisibility);
 prefNormalizeDashes.addEventListener("change", saveTextPreferences);
 prefNormalizeArrows.addEventListener("change", saveTextPreferences);
 prefPlainInlineCode.addEventListener("change", saveTextPreferences);
+prefCombineMarkdown.addEventListener("change", saveTextPreferences);
 document.getElementById("reset-btn").addEventListener("click", resetAll);
+if (resetAllModal) {
+  resetAllModal.addEventListener("click", resetAll);
+}
 document.getElementById("open-output-btn").addEventListener("click", () => openOutputFolder());
 document.getElementById("open-output-modal").addEventListener("click", () => openOutputFolder());
 themeToggle.addEventListener("click", toggleTheme);

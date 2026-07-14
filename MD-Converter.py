@@ -126,6 +126,7 @@ class TextPreferences:
     normalize_dashes: bool = True
     normalize_arrows: bool = True
     plain_inline_code: bool = False
+    combine_into_single_file: bool = False
 
 
 def parse_text_preferences(payload: dict | None = None) -> TextPreferences:
@@ -134,6 +135,7 @@ def parse_text_preferences(payload: dict | None = None) -> TextPreferences:
         normalize_dashes=data.get("normalize_dashes", True),
         normalize_arrows=data.get("normalize_arrows", True),
         plain_inline_code=data.get("plain_inline_code", False),
+        combine_into_single_file=bool(data.get("combine_into_single_file", False)),
     )
 
 
@@ -983,16 +985,40 @@ def convert_md_to_pdf(
     )
 
 
+def file_to_markdown_text(
+    file_path: Path,
+    md_engine: MarkItDown,
+    preferences: TextPreferences | None = None,
+) -> str:
+    result = md_engine.convert(str(file_path))
+    return prepare_markdown_text(result.text_content, preferences)
+
+
 def convert_to_markdown(
     file_path: Path,
     output_path: Path,
     md_engine: MarkItDown,
     preferences: TextPreferences | None = None,
 ) -> None:
-    result = md_engine.convert(str(file_path))
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    markdown_text = prepare_markdown_text(result.text_content, preferences)
+    markdown_text = file_to_markdown_text(file_path, md_engine, preferences)
     output_path.write_text(markdown_text, encoding="utf-8")
+
+
+def combined_markdown_output_path(input_path: Path, output_dir: Path) -> Path:
+    """Name the combined Markdown file after the input folder or file stem."""
+    if input_path.is_dir():
+        return output_dir / f"{input_path.name}.md"
+    return output_dir / f"{input_path.stem}.md"
+
+
+def join_markdown_documents(documents: list[str]) -> str:
+    """Join converted Markdown texts with a blank line; content is otherwise unchanged."""
+    parts = [document.rstrip("\n") for document in documents if document is not None]
+    if not parts:
+        return ""
+    combined = "\n\n".join(parts)
+    return combined + "\n"
 
 
 def convert_file(
@@ -1184,10 +1210,20 @@ def run_conversion(
 ) -> tuple[int, int]:
     files_to_convert = resolve_input_files(input_path, mode)
     input_root = get_input_root(input_path)
+    preferences = preferences or TextPreferences()
+    combine_into_single_file = (
+        preferences.combine_into_single_file and mode == "to_markdown"
+    )
 
     if not files_to_convert:
         logging.warning(str(get_mode_config(mode)["empty_message"]))
         return 0, 0
+
+    if combine_into_single_file:
+        files_to_convert = sorted(
+            files_to_convert,
+            key=lambda path: str(path.relative_to(input_root)).lower(),
+        )
 
     mode_labels = {
         "to_markdown": "Markdown",
@@ -1195,9 +1231,15 @@ def run_conversion(
         "to_pdf": "PDF",
         "to_docx_pdf": "DOCX and PDF",
     }
-    logging.info(
-        f"Found {len(files_to_convert)} files. Converting to {mode_labels[mode]}..."
-    )
+    if combine_into_single_file:
+        logging.info(
+            f"Found {len(files_to_convert)} files. "
+            f"Combining into one {mode_labels[mode]} file..."
+        )
+    else:
+        logging.info(
+            f"Found {len(files_to_convert)} files. Converting to {mode_labels[mode]}..."
+        )
 
     md_engine = MarkItDown() if mode == "to_markdown" else None
     if mode == "to_docx":
@@ -1247,34 +1289,68 @@ def run_conversion(
     failure_count = 0
     total = len(files_to_convert)
 
-    for index, file_path in enumerate(files_to_convert, start=1):
-        percent = round((index / total) * 100, 1)
-        status = f"Converting {file_path.name} ({index}/{total})"
-        broadcaster.publish("status", message=status)
-        broadcaster.publish("progress", percent=percent)
-        logging.debug(f"Processing: {file_path.name}")
+    if combine_into_single_file:
+        if md_engine is None:
+            raise ValueError("MarkItDown engine is required for markdown conversion")
 
-        try:
-            target_path = convert_file(
-                file_path,
-                input_root,
-                output_dir,
-                mode,
-                md_engine=md_engine,
-                preferences=preferences,
-            )
-            if mode == "to_docx_pdf":
-                pdf_name = file_path.with_suffix(".pdf").name
-                logging.info(
-                    f"Converted: {file_path.name} -> {target_path.name}, {pdf_name}"
+        markdown_parts: list[str] = []
+        for index, file_path in enumerate(files_to_convert, start=1):
+            percent = round((index / total) * 100, 1)
+            status = f"Converting {file_path.name} ({index}/{total})"
+            broadcaster.publish("status", message=status)
+            broadcaster.publish("progress", percent=percent)
+            logging.debug(f"Processing: {file_path.name}")
+
+            try:
+                markdown_parts.append(
+                    file_to_markdown_text(file_path, md_engine, preferences)
                 )
-            else:
-                logging.info(f"Converted: {file_path.name} -> {target_path.name}")
-            success_count += 1
-        except Exception as error:
-            logging.error(f"Failed to convert '{file_path.name}': {error}")
-            logging.debug("Stack trace:", exc_info=True)
-            failure_count += 1
+                logging.info(f"Converted: {file_path.name}")
+                success_count += 1
+            except Exception as error:
+                logging.error(f"Failed to convert '{file_path.name}': {error}")
+                logging.debug("Stack trace:", exc_info=True)
+                failure_count += 1
+
+        if markdown_parts:
+            combined_path = combined_markdown_output_path(input_path, output_dir)
+            combined_path.parent.mkdir(parents=True, exist_ok=True)
+            combined_path.write_text(
+                join_markdown_documents(markdown_parts), encoding="utf-8"
+            )
+            logging.info(
+                f"Wrote combined Markdown: {combined_path.name} "
+                f"({len(markdown_parts)} file{'s' if len(markdown_parts) != 1 else ''})"
+            )
+    else:
+        for index, file_path in enumerate(files_to_convert, start=1):
+            percent = round((index / total) * 100, 1)
+            status = f"Converting {file_path.name} ({index}/{total})"
+            broadcaster.publish("status", message=status)
+            broadcaster.publish("progress", percent=percent)
+            logging.debug(f"Processing: {file_path.name}")
+
+            try:
+                target_path = convert_file(
+                    file_path,
+                    input_root,
+                    output_dir,
+                    mode,
+                    md_engine=md_engine,
+                    preferences=preferences,
+                )
+                if mode == "to_docx_pdf":
+                    pdf_name = file_path.with_suffix(".pdf").name
+                    logging.info(
+                        f"Converted: {file_path.name} -> {target_path.name}, {pdf_name}"
+                    )
+                else:
+                    logging.info(f"Converted: {file_path.name} -> {target_path.name}")
+                success_count += 1
+            except Exception as error:
+                logging.error(f"Failed to convert '{file_path.name}': {error}")
+                logging.debug("Stack trace:", exc_info=True)
+                failure_count += 1
 
     logging.info(f"Done. Success: {success_count}, Failed: {failure_count}")
     return success_count, failure_count
@@ -1428,8 +1504,13 @@ def create_app() -> Flask:
 
             broadcaster.publish("status", message="Starting conversion…")
             broadcaster.publish("progress", percent=0)
+            combine_note = (
+                " (combined into one file)"
+                if preferences.combine_into_single_file and mode == "to_markdown"
+                else ""
+            )
             logging.info(
-                f"Starting {mode} conversion of {len(files)} file(s).\n"
+                f"Starting {mode} conversion of {len(files)} file(s){combine_note}.\n"
                 f"Input: {input_path}\n"
                 f"Output: {output_path}"
             )
@@ -1446,9 +1527,16 @@ def create_app() -> Flask:
                     done_message = "No files were converted."
                     status = "empty"
                 elif failure == 0:
-                    done_message = (
-                        f"Successfully converted {success} file{'s' if success != 1 else ''}!"
-                    )
+                    if preferences.combine_into_single_file and mode == "to_markdown":
+                        done_message = (
+                            f"Successfully combined {success} file"
+                            f"{'s' if success != 1 else ''} into one Markdown file!"
+                        )
+                    else:
+                        done_message = (
+                            f"Successfully converted {success} file"
+                            f"{'s' if success != 1 else ''}!"
+                        )
                     status = "success"
                 else:
                     done_message = (
@@ -1496,6 +1584,11 @@ def parse_arguments():
     )
     parser.add_argument("--debug", action="store_true", help="Enable verbose debug logging.")
     parser.add_argument(
+        "--combine",
+        action="store_true",
+        help="Combine all inputs into one Markdown file (to_markdown mode only).",
+    )
+    parser.add_argument(
         "--cli", action="store_true", help="Force CLI mode even when no arguments are given."
     )
     parser.add_argument("--host", default=DEFAULT_HOST, help="Web UI host address.")
@@ -1524,11 +1617,13 @@ def run_cli(args):
         sys.exit(1)
 
     broadcaster = EventBroadcaster()
+    preferences = TextPreferences(combine_into_single_file=bool(args.combine))
     success, failure = run_conversion(
         input_dir,
         output_dir,
         broadcaster,
         mode=normalize_mode(args.mode),
+        preferences=preferences,
     )
     if success == 0 and failure == 0:
         sys.exit(0)

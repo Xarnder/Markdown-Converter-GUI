@@ -428,6 +428,19 @@ body {
   margin-bottom: 16px;
 }
 
+.export-options {
+  margin-bottom: 16px;
+}
+
+.export-options .field-label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.export-options .preference-list {
+  margin-bottom: 0;
+}
+
 .toggle-row {
   display: flex;
   align-items: center;

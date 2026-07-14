@@ -2,7 +2,7 @@
   MD Converter
 ========================================
 
-Started: Wed  8 Jul 2026 13:21:13 BST
+Started: Tue 14 Jul 2026 12:05:37 BST
 Folder: /Users/WorkXander/Documents/Code/MD-Converter
 
 Using Python: /usr/local/bin/python3
@@ -109,6 +109,3 @@ MD Converter web UI running at http://127.0.0.1:8765
 Press Ctrl+C to stop.
  * Serving Flask app 'MD-Converter'
  * Debug mode: off
-
-Error: MD Converter stopped unexpectedly.
-Check launcher.log in this folder for details.

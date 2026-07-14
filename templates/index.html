@@ -34,6 +34,7 @@
       <p class="completion-output" id="completion-output"></p>
       <div class="completion-actions">
         <button type="button" class="btn btn-secondary btn-large" id="open-output-modal" disabled>Open output folder</button>
+        <button type="button" class="btn btn-secondary btn-large" id="reset-all-modal">Reset all</button>
         <button type="button" class="btn btn-primary btn-large" id="dismiss-completion">Great!</button>
       </div>
     </div>
@@ -138,6 +139,18 @@
             <span class="toggle-slider" aria-hidden="true"></span>
           </span>
         </label>
+      </div>
+      <div id="export-options" class="export-options">
+        <span class="field-label">Export options</span>
+        <div class="preference-list">
+          <label class="toggle-row">
+            <span class="toggle-label">Combine all inputs into one Markdown file</span>
+            <span class="toggle-switch">
+              <input type="checkbox" id="pref-combine-markdown" />
+              <span class="toggle-slider" aria-hidden="true"></span>
+            </span>
+          </label>
+        </div>
       </div>
       <div class="options-row">
         <label class="checkbox-row">
